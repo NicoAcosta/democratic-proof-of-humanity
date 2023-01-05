@@ -228,13 +228,18 @@ contract ProofOfHumanity {
 	 */
 	function addSubmission(string calldata evidence, string calldata name) external payable {
 		Submission storage submission = submissions[msg.sender];
+
 		require(!submission.registered && submission.status == Status.None, "Wrong status");
+
 		if (submission.requests.length == 0) {
 			submission.index = uint64(submissionCounter);
 			submissionCounter++;
 		}
+
 		submission.status = Status.Vouching;
+
 		emit AddSubmission(msg.sender, submission.requests.length);
+
 		_requestRegistration(msg.sender, evidence);
 	}
 
