@@ -220,4 +220,26 @@ contract ProofOfHumanity {
 	// ------------------------- //
 	//     Sumbission Process    //
 	// ------------------------- //
+
+	/** @dev Make a request to add a new entry to the list. Paying the full deposit right away is not required as it can be crowdfunded later.
+	 *  @param _evidence A link to evidence using its URI.
+	 *  @param _name The name of the submitter. This parameter is for Subgraph only and it won't be used in this function.
+	 */
+	function addSubmission(string calldata _evidence, string calldata _name) external payable {
+		Submission storage submission = submissions[msg.sender];
+		require(!submission.registered && submission.status == Status.None, "Wrong status");
+		if (submission.requests.length == 0) {
+			submission.index = uint64(submissionCounter);
+			submissionCounter++;
+		}
+		submission.status = Status.Vouching;
+		emit AddSubmission(msg.sender, submission.requests.length);
+		requestRegistration(msg.sender, _evidence);
+	}
+
+	/** @dev Make a request to register/reapply the submission. Paying the full deposit right away is not required as it can be crowdfunded later.
+	 *  @param _submissionID The address of the submission.
+	 *  @param _evidence A link to evidence using its URI.
+	 */
+	function requestRegistration(address _submissionID, string memory _evidence) internal {}
 }
