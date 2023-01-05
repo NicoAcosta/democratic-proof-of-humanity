@@ -5,8 +5,6 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 import {IProofOfHumanity} from "./interfaces/IProofOfHumanity.sol";
 
-error TransferFailed();
-
 contract ProofOfHumanity {
 	IProofOfHumanity public legacyProofOfHumanity;
 
