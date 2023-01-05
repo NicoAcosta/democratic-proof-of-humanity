@@ -86,6 +86,10 @@ contract ProofOfHumanity {
 		mapping(uint256 => Round) rounds; // Tracks the info of each funding round of the challenge.
 	}
 
+	/* Errors */
+
+	error InvalidStatus(Status status);
+
 	/* Storage */
 
 	address public governor; // The address that can make governance changes to the parameters of the contract.
