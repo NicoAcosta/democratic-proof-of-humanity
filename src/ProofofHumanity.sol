@@ -251,5 +251,31 @@ contract ProofOfHumanity {
 	 *  @param submissionID The address of the submission.
 	 *  @param evidence A link to evidence using its URI.
 	 */
-	function _requestRegistration(address submissionID, string memory evidence) private {}
+	function _requestRegistration(address submissionID, string memory evidence) private {
+		Submission storage submission = submissions[_submissionID];
+		submission.requests.push();
+		Request storage request = submission.requests[submission.requests.length - 1];
+
+		uint256 arbitratorDataID = arbitratorDataList.length - 1;
+		request.arbitratorDataID = uint16(arbitratorDataID);
+
+		Round storage round = request.challenges[0].rounds[0];
+
+		IArbitrator requestArbitrator = arbitratorDataList[arbitratorDataID].arbitrator;
+		uint256 arbitrationCost = requestArbitrator.arbitrationCost(
+			arbitratorDataList[arbitratorDataID].arbitratorExtraData
+		);
+		uint256 totalCost = arbitrationCost.addCap(submissionBaseDeposit);
+		contribute(round, Party.Requester, payable(msg.sender), msg.value, totalCost);
+
+		if (round.paidFees[uint256(Party.Requester)] >= totalCost) round.sideFunded = Party.Requester;
+
+		if (bytes(_evidence).length > 0)
+			emit Evidence(
+				requestArbitrator,
+				submission.requests.length - 1 + uint256(uint160(_submissionID)),
+				msg.sender,
+				_evidence
+			);
+	}
 }
