@@ -37,6 +37,7 @@ contract ProofOfHumanity {
 	}
 
 	enum Status {
+		None, // default/null value
 		Vouching, // Request requires vouches / funding to advance to the next state. Should not be in this state for revokal requests.
 		Resolving, // Request is resolving and can be challenged within the time limit.
 		Disputed, // Request has been challenged.
