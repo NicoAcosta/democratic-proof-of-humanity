@@ -88,6 +88,7 @@ contract ProofOfHumanity {
 
 	/* Errors */
 
+	error AlreadyRegistered();
 	error InvalidStatus(Status status);
 
 	/* Storage */
@@ -231,7 +232,8 @@ contract ProofOfHumanity {
 	function addSubmission(string calldata evidence, string calldata name) external payable {
 		Submission storage submission = submissions[msg.sender];
 
-		require(!submission.registered && submission.status == Status.None, "Wrong status");
+		if (submission.registered) revert AlreadyRegistered();
+		if (submission.status != Status.None) revert InvalidStatus(submission.status);
 
 		if (submission.requests.length == 0) {
 			submission.index = uint64(submissionCounter);
