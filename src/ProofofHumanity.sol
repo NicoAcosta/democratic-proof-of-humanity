@@ -216,4 +216,8 @@ contract ProofOfHumanity {
 			abi.encode(DOMAIN_TYPEHASH, keccak256("Proof of Humanity"), block.chainid, address(this))
 		);
 	}
+
+	// ------------------------- //
+	//     Sumbission Process    //
+	// ------------------------- //
 }
