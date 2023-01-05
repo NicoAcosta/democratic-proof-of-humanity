@@ -251,5 +251,5 @@ contract ProofOfHumanity {
 	 *  @param submissionID The address of the submission.
 	 *  @param evidence A link to evidence using its URI.
 	 */
-	function _requestRegistration(address submissionID, string memory evidence) internal {}
+	function _requestRegistration(address submissionID, string memory evidence) private {}
 }
