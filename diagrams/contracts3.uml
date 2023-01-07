@@ -1,0 +1,137 @@
+@startuml POH_V2
+
+' using "protocol" (P) for proxy
+
+left to right direction
+
+skinparam minClassWidth 125
+skinparam ranksep 100
+
+' libraries
+
+interface IERC721Upgradeable
+
+' enums
+
+enum GlobalStatus
+
+' interfaces / abstract classes
+
+interface IData {
+    statusOf(humanId)
+}
+interface ISBT {
+    mint(humanId) onlyRegistrationContract
+    updateOwner(humanId, address) onlyRecoveryContract
+}
+ISBT -l-|> IERC721Upgradeable
+interface IRegistration
+interface IRecovery
+
+interface IOwnership {
+    ownerOf(tokenId) -> address
+}
+interface IMetadata {
+    tokenURI(tokenId) -> string
+    contractURI() -> string
+}
+
+interface IRegistrationVouching
+interface IRegistrationFunding
+interface IRegistrationArbitration
+
+interface IRecoveryVouching
+interface IRecoveryFunding
+interface IRecoveryArbitration
+
+' proxies
+
+protocol Data_Proxy
+protocol SBT_Proxy
+protocol Registration_Proxy
+protocol Recovery_Proxy
+
+protocol RegistrationVouching_Proxy
+protocol RegistrationFunding_Proxy
+protocol RegistrationArbitration_Proxy
+
+protocol RecoveryVouching_Proxy
+protocol RecoveryFunding_Proxy
+protocol RecoveryArbitration_Proxy
+
+' classes
+
+class Data_Imp
+class SBT_Imp
+class Registration_Imp
+class Recovery_Imp
+
+class RegistrationVouching_Imp
+class RegistrationFunding_Imp
+class RegistrationArbitration_Imp
+
+class RecoveryVouching_Imp
+class RecoveryFunding_Imp
+class RecoveryArbitration_Imp
+
+class Ownership_Imp
+class Metadata_Imp
+
+' POH
+object POH
+POH --> Data_Proxy
+POH --> SBT_Proxy
+POH --> Registration_Proxy
+POH --> Recovery_Proxy
+
+' interfaces implementations
+
+Data_Imp .l.|> IData
+SBT_Imp .l.|> ISBT
+Registration_Imp .l.|> IRegistration
+Recovery_Imp .l.|> IRecovery
+
+Ownership_Imp .l.|> IOwnership
+Metadata_Imp .l.|> IMetadata
+
+RegistrationVouching_Imp .l.|> IRegistrationVouching
+RegistrationFunding_Imp .l.|> IRegistrationFunding
+RegistrationArbitration_Imp .l.|> IRegistrationArbitration
+
+RecoveryVouching_Imp .l.|> IRecoveryVouching
+RecoveryFunding_Imp .l.|> IRecoveryFunding
+RecoveryArbitration_Imp .l.|> IRecoveryArbitration
+
+
+' proxies implementations
+
+Data_Proxy --> Data_Imp : delegatecall
+SBT_Proxy --> SBT_Imp : delegatecall
+Registration_Proxy --> Registration_Imp : delegatecall
+Recovery_Proxy --> Recovery_Imp : delegatecall
+
+RegistrationVouching_Proxy --> RegistrationVouching_Imp : delegatecall
+RegistrationFunding_Proxy --> RegistrationFunding_Imp : delegatecall
+RegistrationArbitration_Proxy --> RegistrationArbitration_Imp : delegatecall
+
+RecoveryVouching_Proxy --> RecoveryVouching_Imp : delegatecall
+RecoveryFunding_Proxy --> RecoveryFunding_Imp : delegatecall
+RecoveryArbitration_Proxy --> RecoveryArbitration_Imp : delegatecall
+
+' composition
+
+SBT_Imp --* Ownership_Imp : call
+SBT_Imp --* Metadata_Imp : call
+
+Registration_Imp --* RegistrationVouching_Proxy : call
+Registration_Imp --* RegistrationFunding_Proxy : call
+Registration_Imp --* RegistrationArbitration_Proxy : call
+
+Recovery_Imp --* RecoveryVouching_Proxy : call
+Recovery_Imp --* RecoveryFunding_Proxy : call
+Recovery_Imp --* RecoveryArbitration_Proxy : call
+
+
+' hide @unlinked
+
+@enduml
