@@ -4,6 +4,8 @@ pragma solidity 0.8.14;
 import {IUpgradeableModule} from "./interfaces/IUpgradeableModule.sol";
 import {Governable} from "./Governable.sol";
 
+error InvalidId(uint8 id);
+
 contract UpgradeableModule is IUpgradeableModule, Governable {
 	event SubmoduleUpgraded(uint8 submoduleId, address previousImplementation, address newImplementation);
 
@@ -26,12 +28,18 @@ contract UpgradeableModule is IUpgradeableModule, Governable {
 	}
 
 	function submodule(uint8 id) external view returns (address) {
-		return _submodules[id];
+		address _submodule = __(id);
+		if (_submodule == address(0)) revert InvalidId(id);
+		return _submodule;
 	}
 
 	function upgradeSubmodule(uint8 submoduleId, address newImplementation) external onlyGovernor {
 		emit SubmoduleUpgraded(submoduleId, _submodules[submoduleId], newImplementation);
 
 		_submodules[submoduleId] = newImplementation;
+	}
+
+	function __(uint8 submoduleId) private view returns (address) {
+		return _submodules[submoduleId];
 	}
 }
