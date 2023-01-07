@@ -1,17 +1,23 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.14;
 
+import {IGovernable} from "./interfaces/IGovernable.sol";
+
 error OnlyGovernor();
 
-contract Governable {
-	address public governor;
+contract Governable is IGovernable {
+	address private _governor;
 
 	modifier onlyGovernor() {
-		if (msg.sender != governor) revert OnlyGovernor();
+		if (msg.sender != _governor) revert OnlyGovernor();
 		_;
 	}
 
-	constructor(address _governor) {
-		governor = _governor;
+	constructor(address governor_) {
+		_governor = governor_;
+	}
+
+	function governor() external view returns (address) {
+		return _governor;
 	}
 }
