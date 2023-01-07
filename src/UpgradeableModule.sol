@@ -19,7 +19,7 @@ contract UpgradeableModule is IUpgradeableModule, Governable {
 		_submodules = submodules_;
 	}
 
-	function supermodule() external view returns (address) {
+	function supermodule() public view returns (address) {
 		return _supermodule;
 	}
 
@@ -27,7 +27,7 @@ contract UpgradeableModule is IUpgradeableModule, Governable {
 		return _submodules.length;
 	}
 
-	function submodule(uint8 id) external view returns (address) {
+	function submodule(uint8 id) public view returns (address) {
 		address _submodule = __(id);
 		if (_submodule == address(0)) revert InvalidId(id);
 		return _submodule;
@@ -39,7 +39,7 @@ contract UpgradeableModule is IUpgradeableModule, Governable {
 		_submodules[submoduleId] = newImplementation;
 	}
 
-	function __(uint8 submoduleId) private view returns (address) {
+	function __(uint8 submoduleId) internal view returns (address) {
 		return _submodules[submoduleId];
 	}
 }
