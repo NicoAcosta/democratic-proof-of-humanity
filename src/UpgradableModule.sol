@@ -17,6 +17,18 @@ contract UpgradableModule is IUpgradableModule, Governable {
 		_submodules = submodules_;
 	}
 
+	function supermodule() external view returns (address) {
+		return _supermodule;
+	}
+
+	function submodulesAmount(uint8) external view returns (uint256) {
+		return _submodules.length;
+	}
+
+	function submodule(uint8 id) external view returns (address) {
+		return _submodules[id];
+	}
+
 	function upgradeSubmodule(uint8 submoduleId, address newImplementation) external onlyGovernor {
 		emit SubmoduleUpgraded(submoduleId, _submodules[submoduleId], newImplementation);
 
