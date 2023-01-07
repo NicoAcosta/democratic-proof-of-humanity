@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.14;
 
-import {IUpgradableModule} from "./interfaces/IUpgradableModule.sol";
+import {IUpgradeableModule} from "./interfaces/IUpgradeableModule.sol";
 import {Governable} from "./Governable.sol";
 
-contract UpgradableModule is IUpgradableModule, Governable {
+contract UpgradeableModule is IUpgradeableModule, Governable {
 	event SubmoduleUpgraded(uint8 submoduleId, address previousImplementation, address newImplementation);
 
 	// maybe not necessary
