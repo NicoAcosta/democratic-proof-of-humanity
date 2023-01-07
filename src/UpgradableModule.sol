@@ -5,7 +5,21 @@ import {IUpgradableModule} from "./interfaces/IUpgradableModule.sol";
 import {Governable} from "./Governable.sol";
 
 contract UpgradableModule is IUpgradableModule, Governable {
-	event SubmoduleUpgraded(address previousImplementation, address newImplementation);
+	event SubmoduleUpgraded(uint8 submoduleId, address previousImplementation, address newImplementation);
 
-	constructor(address _governor) Governable(_governor) {}
+	// maybe not necessary
+	address private _supermodule;
+
+	address[] private _submodules;
+
+	constructor(address _governor, address supermodule_, address[] memory submodules_) Governable(_governor) {
+		_supermodule = supermodule_;
+		_submodules = submodules_;
+	}
+
+	function upgradeSubmodule(uint8 submoduleId, address newImplementation) external onlyGovernor {
+		emit SubmoduleUpgraded(submoduleId, _submodules[submoduleId], newImplementation);
+
+		_submodules[submoduleId] = newImplementation;
+	}
 }
